@@ -450,7 +450,7 @@ public class Expression {
 				int loVarIndex=-1, varIndex=0;
 				String strVal="";
 				boolean lastToken=false;
-				while(!scalars.isEmpty()||!arrays.isEmpty())
+				while(varIndex<expression.length()&&(!scalars.isEmpty()||!arrays.isEmpty()))
 				{
 					
 					//Find Variable
@@ -479,7 +479,26 @@ public class Expression {
 						//Var is array
 						if(expression.charAt(varIndex)=='[')
 						{
+							int firstBracket=varIndex;
+							while(expression.charAt(varIndex)!=']')
+							{
+								varIndex++;
+							}
+							int secondBracket=varIndex;
+
+							int arrayValueIndex=(int)evaluateRecursively(expression.substring(firstBracket+1,secondBracket));
 							//Recursively evaluate
+							System.out.println("ADDING VALUE: "+arrays.get(arrays.indexOf(new ArraySymbol(strVal))).values[arrayValueIndex] );
+						//	if(!lastToken)
+							expression=expression.substring(0, loVarIndex)+arrays.get(arrays.indexOf(new ArraySymbol(strVal))).values[arrayValueIndex]+expression.substring(varIndex+1);
+							/*else
+								expression=expression.substring(0, loVarIndex)+arrays.get(arrays.indexOf(new ArraySymbol(strVal))).values[arrayValueIndex];
+*/
+							if(!expression.contains(strVal))
+							{
+								System.out.println("Removing "+arrays.get(arrays.indexOf(new ArraySymbol(strVal))));
+								scalars.remove(arrays.get(arrays.indexOf(new ArraySymbol(strVal))));
+							}
 						}
 						else 
 						{
