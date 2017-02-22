@@ -443,7 +443,7 @@ public class Expression {
 
 
 	}
-
+//test: arrayA[(varx*(vary-5+30/arrayA[3])-6)/10]
 	private String replaceVariablesWithScalar(String expression)
 	{
 		//HiVarIndex is index after variable
@@ -479,13 +479,32 @@ public class Expression {
 						//Var is array
 						if(expression.charAt(varIndex)=='[')
 						{
+							Stack<Character> brackets=new Stack<Character>();
+							brackets.push(']');
 							int firstBracket=varIndex;
+							for(int i=varIndex+1;i<expression.length();i++)
+							{
+								if(expression.charAt(i)=='[')
+								{
+									brackets.push(']');
+								}
+
+								if(expression.charAt(i)==']')
+								{
+									brackets.pop();
+									if(brackets.isEmpty())
+									{
+										varIndex=i;
+										break;
+									}
+								}
+							}/*
 							while(expression.charAt(varIndex)!=']')
 							{
 								varIndex++;
-							}
+							}*/
 							int secondBracket=varIndex;
-
+							System.out.println("second bracket: "+secondBracket);
 							int arrayValueIndex=(int)evaluateRecursively(expression.substring(firstBracket+1,secondBracket));
 							//Recursively evaluate
 							System.out.println("ADDING VALUE: "+arrays.get(arrays.indexOf(new ArraySymbol(strVal))).values[arrayValueIndex] );
